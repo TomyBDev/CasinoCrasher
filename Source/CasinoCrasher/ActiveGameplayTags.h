@@ -1,0 +1,11 @@
+﻿#pragma once
+
+#include "NativeGameplayTags.h"
+
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Player_Status_Dead)
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Player_Action_Punching)
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Player_Action_Throwing)
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Player_Action_Rolling)
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Player_Action_Bombing)
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Player_Action_Sprinting)
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Player_Action_Jumping)

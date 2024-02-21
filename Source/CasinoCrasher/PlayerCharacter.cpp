@@ -5,6 +5,7 @@
 
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
+#include "ActiveGameplayTags.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -17,7 +18,6 @@ APlayerCharacter::APlayerCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = true;
-
 	
 	GetCapsuleComponent()->InitCapsuleSize(38.f,12.f);
 	
@@ -27,6 +27,7 @@ APlayerCharacter::APlayerCharacter()
 	//GetCharacterMovement()->JumpZVelocity = 700.f;
 	//GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MaxWalkSpeed = 300.f;
+	GetCharacterMovement()->MaxAcceleration = 1000.f;
 	//GetCharacterMovement()->MinAnalogWalkSpeed = 20.f;
 	//GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
@@ -38,8 +39,9 @@ APlayerCharacter::APlayerCharacter()
 	sprintArm->SocketOffset = FVector(0.0f, 10.f, 15.f);
 	sprintArm->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 	sprintArm->ProbeSize = 16.f;
+	
 	sprintArm->bEnableCameraLag = true;
-	sprintArm->CameraLagSpeed = 16;
+	sprintArm->CameraLagSpeed = 50;
 
 	
 	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
@@ -51,7 +53,6 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 // Called every frame
@@ -116,7 +117,7 @@ void APlayerCharacter::StartSprint_Implementation()
 	UCharacterMovementComponent* charMovementComponent = GetCharacterMovement();
 	if (IsValid(charMovementComponent))
 	{
-		charMovementComponent->MaxWalkSpeed = 600;
+		charMovementComponent->MaxWalkSpeed = 450;
 	}
 }
 

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "PlayerInputInterface.h"
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
@@ -56,6 +57,11 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* camera;
 
+	/** Punch Montage */
 	UPROPERTY(EditAnywhere, Category = Animations, meta = (AllowPrivateAccess = "true"))
 	class UAnimMontage* punchMontage;
+
+	/** Active Gameplay Tags */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Tags, meta = (AllowPrivateAccess = "true"))
+	FGameplayTagContainer activeGameplayTags;
 };
