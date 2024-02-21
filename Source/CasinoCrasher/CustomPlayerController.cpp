@@ -41,8 +41,11 @@ void ACustomPlayerController::SetupInputComponent()
 		//Stop Sprint
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &ACustomPlayerController::StopSprint);
 		
-		//Jumping
+		//Attack 1
 		EnhancedInputComponent->BindAction(Attack1Action, ETriggerEvent::Triggered, this, &ACustomPlayerController::Attack1);
+		
+		//Roll
+		EnhancedInputComponent->BindAction(RollAction, ETriggerEvent::Triggered, this, &ACustomPlayerController::Roll);
 	}
 }
 
@@ -115,5 +118,13 @@ void ACustomPlayerController::Interact()
 	APawn* pawn = GetPawn();
 	if (UKismetSystemLibrary::DoesImplementInterface(pawn, UPlayerInputInterface::StaticClass())) {				
 		IPlayerInputInterface::Execute_Interact(pawn);
+	}
+}
+
+void ACustomPlayerController::Roll()
+{
+	APawn* pawn = GetPawn();
+	if (UKismetSystemLibrary::DoesImplementInterface(pawn, UPlayerInputInterface::StaticClass())) {				
+		IPlayerInputInterface::Execute_Roll(pawn);
 	}
 }

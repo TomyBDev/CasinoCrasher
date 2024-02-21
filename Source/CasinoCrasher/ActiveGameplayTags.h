@@ -3,6 +3,8 @@
 #include "NativeGameplayTags.h"
 
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Player_Status_Dead)
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Player_Status_OnGround)
+UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Player_Status_ActionLocked)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Player_Action_Punching)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Player_Action_Throwing)
 UE_DECLARE_GAMEPLAY_TAG_EXTERN(TAG_Player_Action_Rolling)

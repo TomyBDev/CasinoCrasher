@@ -47,7 +47,21 @@ protected:
 
 	virtual void Interact_Implementation() override;
 
+	virtual void Roll_Implementation() override;
+
+	virtual void Falling() override;
+
+	virtual void Landed(const FHitResult& Hit) override;
+	
+	virtual void OnJumped_Implementation() override;
+
 private:
+
+	void EndRoll();
+
+	void StartActionLock();
+	
+	void EndActionLock();
 
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -64,4 +78,10 @@ private:
 	/** Active Gameplay Tags */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Tags, meta = (AllowPrivateAccess = "true"))
 	FGameplayTagContainer activeGameplayTags;
+
+	FTimerHandle rollTH;
+	float rollTime = 1.4625f;
+
+	FTimerHandle actionLockTH;
+	float actionLockTime = 0.25f;
 };
