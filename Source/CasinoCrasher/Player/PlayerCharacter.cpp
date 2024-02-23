@@ -5,7 +5,7 @@
 
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
-#include "ActiveGameplayTags.h"
+#include "../ActiveGameplayTags.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -60,7 +60,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (activeGameplayTags.HasTag(TAG_Player_Action_Rolling))
+	if (activeGameplayTags.HasTag(TAG_Action_Rolling))
 	{
 		if (Controller != nullptr)
 		{
@@ -92,7 +92,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void APlayerCharacter::Move_Implementation(const FInputActionValue& Value)
 {
-	if (activeGameplayTags.HasTag(TAG_Player_Action_Rolling))
+	if (activeGameplayTags.HasTag(TAG_Action_Rolling))
 		return;
 	
 	// input is a Vector2D
@@ -131,7 +131,7 @@ void APlayerCharacter::Look_Implementation(const FInputActionValue& Value)
 
 void APlayerCharacter::Jump_Implementation()
 {
-	if (activeGameplayTags.HasTag(TAG_Player_Action_Rolling) || activeGameplayTags.HasTag(TAG_Player_Status_ActionLocked))
+	if (activeGameplayTags.HasTag(TAG_Action_Rolling) || activeGameplayTags.HasTag(TAG_Status_ActionLocked))
 		return;
 	
 	Super::Jump();
@@ -181,10 +181,10 @@ void APlayerCharacter::Interact_Implementation()
 
 void APlayerCharacter::Roll_Implementation()
 {
-	if (activeGameplayTags.HasTag(TAG_Player_Action_Rolling) || activeGameplayTags.HasTag(TAG_Player_Status_ActionLocked))
+	if (activeGameplayTags.HasTag(TAG_Action_Rolling) || activeGameplayTags.HasTag(TAG_Status_ActionLocked))
 		return;
 	
-	activeGameplayTags.AddTag(TAG_Player_Action_Rolling);
+	activeGameplayTags.AddTag(TAG_Action_Rolling);
 
 	GetWorld()->GetTimerManager().SetTimer(rollTH, this, &APlayerCharacter::EndRoll, rollTime);
 }
@@ -193,7 +193,7 @@ void APlayerCharacter::Falling()
 {
 	Super::Falling();
 
-	activeGameplayTags.RemoveTag(TAG_Player_Status_OnGround);
+	activeGameplayTags.RemoveTag(TAG_Status_OnGround);
 }
 
 void APlayerCharacter::Landed(const FHitResult& Hit)
@@ -202,22 +202,22 @@ void APlayerCharacter::Landed(const FHitResult& Hit)
 
 	StartActionLock();
 	
-	activeGameplayTags.RemoveTag(TAG_Player_Action_Jumping);
-	activeGameplayTags.AddTag(TAG_Player_Status_OnGround);	
+	activeGameplayTags.RemoveTag(TAG_Action_Jumping);
+	activeGameplayTags.AddTag(TAG_Status_OnGround);	
 }
 
 void APlayerCharacter::OnJumped_Implementation()
 {
 	Super::OnJumped_Implementation();
 	
-	activeGameplayTags.AddTag(TAG_Player_Action_Jumping);
+	activeGameplayTags.AddTag(TAG_Action_Jumping);
 }
 
 void APlayerCharacter::EndRoll()
 {
 	StartActionLock();
 	
-	activeGameplayTags.RemoveTag(TAG_Player_Action_Rolling);
+	activeGameplayTags.RemoveTag(TAG_Action_Rolling);
 	
 	if(GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("roll end!"));	
@@ -225,11 +225,11 @@ void APlayerCharacter::EndRoll()
 
 void APlayerCharacter::StartActionLock()
 {
-	activeGameplayTags.AddTag(TAG_Player_Status_ActionLocked);
+	activeGameplayTags.AddTag(TAG_Status_ActionLocked);
 	GetWorld()->GetTimerManager().SetTimer(actionLockTH, this, &APlayerCharacter::EndActionLock, actionLockTime);
 }
 
 void APlayerCharacter::EndActionLock()
 {
-	activeGameplayTags.RemoveTag(TAG_Player_Status_ActionLocked);
+	activeGameplayTags.RemoveTag(TAG_Status_ActionLocked);
 }

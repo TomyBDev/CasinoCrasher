@@ -1,7 +1,7 @@
 // Copyright 2024 Thomas Ballantyne. All rights reserved.
 
 
-#include "CustomPlayerController.h"
+#include "../Player/CCPlayerController.h"
 
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
@@ -9,7 +9,7 @@
 
 #include "PlayerInputInterface.h"
 
-void ACustomPlayerController::BeginPlay()
+void ACCPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -19,7 +19,7 @@ void ACustomPlayerController::BeginPlay()
 	}
 }
 
-void ACustomPlayerController::SetupInputComponent()
+void ACCPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
@@ -27,29 +27,29 @@ void ACustomPlayerController::SetupInputComponent()
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent)) {
 
 		//Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ACustomPlayerController::Move);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ACCPlayerController::Move);
 
 		//Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACustomPlayerController::Look);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ACCPlayerController::Look);
 		
 		//Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACustomPlayerController::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACCPlayerController::Jump);
 		
 		//Start Sprint
-		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &ACustomPlayerController::StartSprint);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &ACCPlayerController::StartSprint);
 		
 		//Stop Sprint
-		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &ACustomPlayerController::StopSprint);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &ACCPlayerController::StopSprint);
 		
 		//Attack 1
-		EnhancedInputComponent->BindAction(Attack1Action, ETriggerEvent::Triggered, this, &ACustomPlayerController::Attack1);
+		EnhancedInputComponent->BindAction(Attack1Action, ETriggerEvent::Triggered, this, &ACCPlayerController::Attack1);
 		
 		//Roll
-		EnhancedInputComponent->BindAction(RollAction, ETriggerEvent::Triggered, this, &ACustomPlayerController::Roll);
+		EnhancedInputComponent->BindAction(RollAction, ETriggerEvent::Triggered, this, &ACCPlayerController::Roll);
 	}
 }
 
-void ACustomPlayerController::Move(const FInputActionValue& Value)
+void ACCPlayerController::Move(const FInputActionValue& Value)
 {
 	APawn* pawn = GetPawn();
 	if (UKismetSystemLibrary::DoesImplementInterface(pawn, UPlayerInputInterface::StaticClass())) {				
@@ -57,7 +57,7 @@ void ACustomPlayerController::Move(const FInputActionValue& Value)
 	}
 }
 
-void ACustomPlayerController::Look(const FInputActionValue& Value)
+void ACCPlayerController::Look(const FInputActionValue& Value)
 {
 	APawn* pawn = GetPawn();
 	if (UKismetSystemLibrary::DoesImplementInterface(pawn, UPlayerInputInterface::StaticClass())) {				
@@ -65,7 +65,7 @@ void ACustomPlayerController::Look(const FInputActionValue& Value)
 	}
 }
 
-void ACustomPlayerController::Jump()
+void ACCPlayerController::Jump()
 {
 	APawn* pawn = GetPawn();
 	if (UKismetSystemLibrary::DoesImplementInterface(pawn, UPlayerInputInterface::StaticClass())) {				
@@ -73,7 +73,7 @@ void ACustomPlayerController::Jump()
 	}
 }
 
-void ACustomPlayerController::StartSprint()
+void ACCPlayerController::StartSprint()
 {
 	APawn* pawn = GetPawn();
 	if (UKismetSystemLibrary::DoesImplementInterface(pawn, UPlayerInputInterface::StaticClass())) {				
@@ -81,7 +81,7 @@ void ACustomPlayerController::StartSprint()
 	}
 }
 
-void ACustomPlayerController::StopSprint()
+void ACCPlayerController::StopSprint()
 {
 	APawn* pawn = GetPawn();
 	if (UKismetSystemLibrary::DoesImplementInterface(pawn, UPlayerInputInterface::StaticClass())) {				
@@ -89,7 +89,7 @@ void ACustomPlayerController::StopSprint()
 	}
 }
 
-void ACustomPlayerController::Attack1()
+void ACCPlayerController::Attack1()
 {
 	APawn* pawn = GetPawn();
 	if (UKismetSystemLibrary::DoesImplementInterface(pawn, UPlayerInputInterface::StaticClass())) {				
@@ -97,7 +97,7 @@ void ACustomPlayerController::Attack1()
 	}
 }
 
-void ACustomPlayerController::Attack2()
+void ACCPlayerController::Attack2()
 {
 	APawn* pawn = GetPawn();
 	if (UKismetSystemLibrary::DoesImplementInterface(pawn, UPlayerInputInterface::StaticClass())) {				
@@ -105,7 +105,7 @@ void ACustomPlayerController::Attack2()
 	}
 }
 
-void ACustomPlayerController::Attack3()
+void ACCPlayerController::Attack3()
 {
 	APawn* pawn = GetPawn();
 	if (UKismetSystemLibrary::DoesImplementInterface(pawn, UPlayerInputInterface::StaticClass())) {				
@@ -113,7 +113,7 @@ void ACustomPlayerController::Attack3()
 	}
 }
 
-void ACustomPlayerController::Interact()
+void ACCPlayerController::Interact()
 {
 	APawn* pawn = GetPawn();
 	if (UKismetSystemLibrary::DoesImplementInterface(pawn, UPlayerInputInterface::StaticClass())) {				
@@ -121,7 +121,7 @@ void ACustomPlayerController::Interact()
 	}
 }
 
-void ACustomPlayerController::Roll()
+void ACCPlayerController::Roll()
 {
 	APawn* pawn = GetPawn();
 	if (UKismetSystemLibrary::DoesImplementInterface(pawn, UPlayerInputInterface::StaticClass())) {				

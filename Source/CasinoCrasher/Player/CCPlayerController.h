@@ -4,15 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "CustomPlayerController.generated.h"
+#include "CCPlayerController.generated.h"
 
 class UInputAction;
 struct FInputActionValue;
+
 /**
  * 
  */
 UCLASS()
-class CASINOCRASHER_API ACustomPlayerController : public APlayerController
+class CASINOCRASHER_API ACCPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 

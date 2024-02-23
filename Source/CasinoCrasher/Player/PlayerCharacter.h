@@ -5,11 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "PlayerInputInterface.h"
+#include "CasinoCrasher/Character/CharacterBase.h"
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
 UCLASS()
-class CASINOCRASHER_API APlayerCharacter : public ACharacter, public IPlayerInputInterface
+class CASINOCRASHER_API APlayerCharacter : public ACharacterBase, public IPlayerInputInterface
 {
 	GENERATED_BODY()
 
