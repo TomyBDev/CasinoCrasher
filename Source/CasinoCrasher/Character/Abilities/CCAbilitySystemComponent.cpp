@@ -7,7 +7,9 @@
 #include "AbilitySystemLog.h"
 #include "Animation/AnimInstance.h"
 #include "CCGameplayAbility.h"
+#include "EnhancedInputComponent.h"
 #include "GameplayCueManager.h"
+#include "CasinoCrasher/Character/CharacterBase.h"
 
 static TAutoConsoleVariable<float> CVarReplayMontageErrorThreshold(
 	TEXT("GS.replay.MontageErrorThreshold"),
@@ -46,60 +48,29 @@ void UCCAbilitySystemComponent::NotifyAbilityEnded(FGameplayAbilitySpecHandle Ha
 	ClearAnimatingAbilityForAllMeshes(Ability);
 }
 
+void UCCAbilitySystemComponent::OnGiveAbility(FGameplayAbilitySpec& AbilitySpec)
+{
+	Super::OnGiveAbility(AbilitySpec);
+
+	UCCGameplayAbility* Ability = Cast<UCCGameplayAbility>(AbilitySpec.Ability);
+	ACharacter* Character = Cast<ACharacterBase>(GetAvatarActor());
+
+	if(!Ability || !Character)
+	{
+		return;
+	}
+
+	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(Character->InputComponent);
+
+	if(EnhancedInputComponent && Ability->InputAction && Ability->bActivateOnInput)
+	{
+		Ability->InputBindingHandle = EnhancedInputComponent->BindAction(static_cast<const UInputAction*>(Ability->InputAction), ETriggerEvent::Triggered, Ability, &UCCGameplayAbility::OnInputCallback).GetHandle();
+	}
+}
+
 UCCAbilitySystemComponent* UCCAbilitySystemComponent::GetAbilitySystemComponentFromActor(const AActor* Actor, bool LookForComponent)
 {
 	return Cast<UCCAbilitySystemComponent>(UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Actor, LookForComponent));
-}
-
-void UCCAbilitySystemComponent::AbilityLocalInputPressed(int32 InputID)
-{
-	// Consume the input if this InputID is overloaded with GenericConfirm/Cancel and the GenericConfim/Cancel callback is bound
-	if (IsGenericConfirmInputBound(InputID))
-	{
-		LocalInputConfirm();
-		return;
-	}
-
-	if (IsGenericCancelInputBound(InputID))
-	{
-		LocalInputCancel();
-		return;
-	}
-
-	// ---------------------------------------------------------
-
-	ABILITYLIST_SCOPE_LOCK();
-	for (FGameplayAbilitySpec& Spec : ActivatableAbilities.Items)
-	{
-		if (Spec.InputID == InputID)
-		{
-			if (Spec.Ability)
-			{
-				Spec.InputPressed = true;
-				if (Spec.IsActive())
-				{
-					if (Spec.Ability->bReplicateInputDirectly && IsOwnerActorAuthoritative() == false)
-					{
-						ServerSetInputPressed(Spec.Handle);
-					}
-
-					AbilitySpecInputPressed(Spec);
-
-					// Invoke the InputPressed event. This is not replicated here. If someone is listening, they may replicate the InputPressed event to the server.
-					InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, Spec.Handle, Spec.ActivationInfo.GetActivationPredictionKey());
-				}
-				else
-				{
-					UCCGameplayAbility* GA = Cast<UCCGameplayAbility>(Spec.Ability);
-					if (GA && GA->bActivateOnInput)
-					{
-						// Ability is not active, so try to activate it
-						TryActivateAbility(Spec.Handle);
-					}
-				}
-			}
-		}
-	}
 }
 
 int32 UCCAbilitySystemComponent::K2_GetTagCount(FGameplayTag TagToCheck) const

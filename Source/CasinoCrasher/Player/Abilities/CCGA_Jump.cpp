@@ -37,12 +37,17 @@ bool UCCGA_Jump::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 		return false;
 	}
 
+	if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("can activate?"));	
+
 	const ACharacterBase* Character = CastChecked<ACharacterBase>(ActorInfo->AvatarActor.Get(), ECastCheckedType::NullAllowed);
 	return Character && Character->CanJump();
 }
 
 void UCCGA_Jump::InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
 {
+	if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Not Jumping!"));	
 	if (ActorInfo != NULL && ActorInfo->AvatarActor != NULL)
 	{
 		CancelAbility(Handle, ActorInfo, ActivationInfo, true);

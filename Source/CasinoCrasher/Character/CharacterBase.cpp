@@ -23,19 +23,7 @@ ACharacterBase::ACharacterBase()
 void ACharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	if (IsValid(AbilitySystemComponent) && IsValid(InputComponent))
-	{
-		// Bind to AbilitySystemComponent
-		FTopLevelAssetPath AbilityEnumAssetPath = FTopLevelAssetPath(FName("/Script/CasinoCrasher"), FName("ECCAbilityInputID"));
-		AbilitySystemComponent->BindAbilityActivationToInputComponent(PlayerInputComponent, FGameplayAbilityInputBinds(FString("ConfirmTarget"),
-			FString("CancelTarget"), AbilityEnumAssetPath, static_cast<int32>(ECCAbilityInputID::Confirm), static_cast<int32>(ECCAbilityInputID::Cancel)));
-	}
-	else
-	{
-		if(GEngine)
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("AAAAAAAAAAAAA"));	
-	}
+	
 }
 
 void ACharacterBase::PossessedBy(AController* NewController)
@@ -123,19 +111,17 @@ void ACharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+	AddCharacterAbilities();
 }
 
 void ACharacterBase::AddCharacterAbilities()
 {
-
 	if (!IsValid(AbilitySystemComponent) || AbilitySystemComponent->bCharacterAbilitiesGiven)
 		return;
 
 	for (TSubclassOf<UCCGameplayAbility>& StartupAbility : CharacterAbilities)
 	{
-		AbilitySystemComponent->GiveAbility(
-			FGameplayAbilitySpec(StartupAbility, 1, static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this));
+		AbilitySystemComponent->GiveAbility(FGameplayAbilitySpec(StartupAbility, 1, static_cast<int32>(StartupAbility.GetDefaultObject()->AbilityInputID), this));
 	}
 
 	AbilitySystemComponent->bCharacterAbilitiesGiven = true;

@@ -85,11 +85,10 @@ class CASINOCRASHER_API UCCAbilitySystemComponent : public UAbilitySystemCompone
 
 	virtual void NotifyAbilityEnded(FGameplayAbilitySpecHandle Handle, UGameplayAbility* Ability, bool bWasCancelled) override;
 
+	virtual void OnGiveAbility(FGameplayAbilitySpec& AbilitySpec) override;
+
 	// Version of function in AbilitySystemGlobals that returns correct type
 	static UCCAbilitySystemComponent* GetAbilitySystemComponentFromActor(const AActor* Actor, bool LookForComponent = false);
-
-	// Input bound to an ability is pressed
-	virtual void AbilityLocalInputPressed(int32 InputID) override;
 
 	// Exposes GetTagCount to Blueprint
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Abilities", Meta = (DisplayName = "GetTagCount", ScriptName = "GetTagCount"))

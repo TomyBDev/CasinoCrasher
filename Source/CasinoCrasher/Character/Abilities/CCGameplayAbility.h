@@ -8,6 +8,8 @@
 #include "CasinoCrasher/CasinoCrasher.h"
 #include "CCGameplayAbility.generated.h"
 
+class UCCInputAction;
+struct FInputActionValue;
 class USkeletalMeshComponent;
 
 USTRUCT()
@@ -39,8 +41,25 @@ UCLASS()
 class CASINOCRASHER_API UCCGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
-	public:
+	
+public:
 	UCCGameplayAbility();
+
+	/**
+	 * @brief the Input Action which will be used to activate this ability
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input")
+	TObjectPtr<UCCInputAction> InputAction;
+
+	FORCEINLINE
+	/**
+	 * Get the InputID for this InputAction
+	 */
+	 int32 GetInputID() const;
+
+	void OnInputCallback(const FInputActionValue& InValue);
+
+	int32 InputBindingHandle;
 
 	// Abilities with this set will automatically activate when the input is pressed
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Ability")
@@ -194,4 +213,10 @@ protected:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Ability|Animation", Meta = (AdvancedDisplay = "OverrideBlendOutTime"))
 	void MontageStopForAllMeshes(float OverrideBlendOutTime = -1.0f);
+
+private:
+	int32 InputID;
+
+	UPROPERTY()
+	class UCCAbilitySystemComponent* AbilitySystemComponent;
 };

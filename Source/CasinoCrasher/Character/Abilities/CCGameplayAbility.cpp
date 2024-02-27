@@ -8,6 +8,7 @@
 #include "CCTargetType.h"
 #include "../CharacterBase.h"
 #include "GameplayTagContainer.h"
+#include "CasinoCrasher/Framework/CCInputAction.h"
 #include "CasinoCrasher/Player/PlayerCharacter.h"
 
 UCCGameplayAbility::UCCGameplayAbility()
@@ -30,13 +31,37 @@ UCCGameplayAbility::UCCGameplayAbility()
 	InteractingRemovalTag = FGameplayTag::RequestGameplayTag("State.InteractingRemoval");
 }
 
+int32 UCCGameplayAbility::GetInputID() const
+{
+	return InputAction ? InputAction->GetInputID() : -1;
+}
+
+void UCCGameplayAbility::OnInputCallback(const FInputActionValue& InValue)
+{
+	if(!AbilitySystemComponent)
+	{
+		return;
+	}
+
+	if(InValue.Get<bool>())
+	{
+		AbilitySystemComponent->AbilityLocalInputPressed(InputID);
+	}else
+	{
+		AbilitySystemComponent->AbilityLocalInputReleased(InputID);
+		if(GEngine)
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("release me!"));	
+	}
+}
+
 void UCCGameplayAbility::OnAvatarSet(const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilitySpec& Spec)
 {
 	Super::OnAvatarSet(ActorInfo, Spec);
-
+	
 	if (bActivateAbilityOnGranted)
 	{
-		ActorInfo->AbilitySystemComponent->TryActivateAbility(Spec.Handle, false);
+		AbilitySystemComponent = StaticCast<UCCAbilitySystemComponent*>(ActorInfo->AbilitySystemComponent.Get());
+		AbilitySystemComponent->TryActivateAbility(Spec.Handle, false);
 	}
 }
 
@@ -297,7 +322,6 @@ void UCCGameplayAbility::MontageJumpToSectionForMesh(USkeletalMeshComponent* InM
 {
 	check(CurrentActorInfo);
 
-	UCCAbilitySystemComponent* const AbilitySystemComponent = Cast<UCCAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo_Checked());
 	if (AbilitySystemComponent->IsAnimatingAbilityForAnyMesh(this))
 	{
 		AbilitySystemComponent->CurrentMontageJumpToSectionForMesh(InMesh, SectionName);
@@ -308,7 +332,6 @@ void UCCGameplayAbility::MontageSetNextSectionNameForMesh(USkeletalMeshComponent
 {
 	check(CurrentActorInfo);
 
-	UCCAbilitySystemComponent* const AbilitySystemComponent = Cast<UCCAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo_Checked());
 	if (AbilitySystemComponent->IsAnimatingAbilityForAnyMesh(this))
 	{
 		AbilitySystemComponent->CurrentMontageSetNextSectionNameForMesh(InMesh, FromSectionName, ToSectionName);
@@ -319,7 +342,6 @@ void UCCGameplayAbility::MontageStopForMesh(USkeletalMeshComponent* InMesh, floa
 {
 	check(CurrentActorInfo);
 
-	UCCAbilitySystemComponent* const AbilitySystemComponent = Cast<UCCAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent.Get());
 	if (AbilitySystemComponent != nullptr)
 	{
 		// We should only stop the current montage if we are the animating ability
@@ -334,7 +356,6 @@ void UCCGameplayAbility::MontageStopForAllMeshes(float OverrideBlendOutTime)
 {
 	check(CurrentActorInfo);
 
-	UCCAbilitySystemComponent* const AbilitySystemComponent = Cast<UCCAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent.Get());
 	if (AbilitySystemComponent != nullptr)
 	{
 		if (AbilitySystemComponent->IsAnimatingAbilityForAnyMesh(this))
